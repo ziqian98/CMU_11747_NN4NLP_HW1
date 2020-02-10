@@ -120,7 +120,6 @@ print(len(trainwordlistlist))
 print(len(validlabellist))
 
 
-
 print(max([len(x) for x in trainwordlistlist]))
 print(max([len(x) for x in validwordlistlist]))
 print(max([len(x) for x in testwordlistlist]))
@@ -132,13 +131,18 @@ def generpad(num):
     for i in range(num):
         pad.append(padidx)
     return pad
-        
+
+
+
+orderedlabel=list(set(trainlabellist.copy()))
+orderedlabel.sort()
+print(orderedlabel)
 
 
 label2num = {}
-labelset  = set(trainlabellist)
+
 i = 0
-for label in labelset:
+for label in orderedlabel:
     label2num[label] = i
     i = i + 1
 print(label2num)
@@ -252,7 +256,7 @@ class MyConv(nn.Module):
 
 model = MyConv(embmatrix)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.Adam(model.parameters(), lr=0.0001)
 device = torch.device("cuda" if cuda else "cpu")
 model.to(device)
 print(model)
@@ -327,6 +331,6 @@ for i in range(n_epochs):
     test_loss, test_acc = test_model(model, val_loader, criterion)
 
     print('='*20)
-    modelname = str(i+1) + "epochemb.t7"  
+    modelname = str(i+1) + "epochembedsl.t7"  
     torch.save(model.state_dict(),modelname)
     
